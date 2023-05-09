@@ -2,12 +2,32 @@ from flask import Flask, url_for
 from markupsafe import escape
 from flask import request
 from flask import render_template
+from flask_pymongo import PyMongo, MongoClient
+import pymongo
 
 app = Flask(__name__)
+'''
+app.config["MONGO_URI"] = "mongodb://localhost:27017/myweb"
+mongo = PyMongo(app)'''
+'''
+conn = pymongo.MongoClient("localhost",27017)
+db = conn.test
+col = db.members
+
+col.insert_one(test)
+'''
+
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+
+mydb = client["test"]
+mydb.members.insert_one({"test": 'test'})
+print(client.list_database_names())
+
 
 @app.route("/")
 def index():
-    return render_template("main.html")
+    online_users = mongo.db.users.find({"online":True})
+    return render_template("index.html", online_users=online_users)
 
 @app.route("/write", methods=["GET","POST"])
 def board_write():
@@ -16,8 +36,27 @@ def board_write():
         title = request.form.get("title")
         contents = request.form.get("contents")
 
+        #mongo db data upload
+        board = mongo.db.board
+        post ={
+            "name":name,
+            "title":title,
+            "contents":contents
+        }
+
+        board.insert_one(post)
+        return ""
+        
+
+        #로그확인
+
     else:
         return render_template("write.html")
+    
+@app.route("/user/<username>")
+def user_profile(username):
+    user = mongo.db.users.find_one_or_404({"_id":username})
+    return render_template("user.html", user=user)
 
     
 
