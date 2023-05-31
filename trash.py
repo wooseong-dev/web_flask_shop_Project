@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+'''from flask import Flask, url_for, current_app, g
 from markupsafe import escape
 from flask import request
 from flask import render_template
@@ -6,23 +6,27 @@ from flask_pymongo import PyMongo, MongoClient
 import pymongo
 
 app = Flask(__name__)
-'''
 app.config["MONGO_URI"] = "mongodb://localhost:27017/myweb"
-mongo = PyMongo(app)'''
-'''
-conn = pymongo.MongoClient("localhost",27017)
-db = conn.test
-col = db.members
+mongo = PyMongo(app)
 
-col.insert_one(test)
-'''
 
+
+'''
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 
 mydb = client["test"]
 mydb.members.insert_one({"test": 'test'})
 print(client.list_database_names())
+'''
 
+def get_db():
+    db = getattr(g, "_database", None)
+
+    if db is None:
+
+        db = g._database = PyMongo(current_app).db
+
+    return db
 
 @app.route("/")
 def index():
@@ -109,3 +113,4 @@ if __name__ == '__main__':
 
 
 
+'''

@@ -1,3 +1,4 @@
+'''
 import pymongo
 
 test = {
@@ -16,4 +17,12 @@ conn = pymongo.MongoClient("localhost",27017)
 db = conn.test
 col = db.members
 
-col.insert_one(test)
+col.insert_one(test)'''
+
+import sys
+import os
+
+dir = os.path.realpath(__file__) #경로 불러오기
+print(dir)
+sys.path.append("C:\\")
+#sys.path.append('\\wudong.synology.me@ssl@5006\DavWWWRoot\두번째 저장소\개인파일\IT_SourceCode\')
