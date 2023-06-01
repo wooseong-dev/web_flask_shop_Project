@@ -4,7 +4,7 @@ from flask import request
 from flask import render_template
 from flask_pymongo import PyMongo, MongoClient
 import pymongo
-
+from main import config
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/myweb"
 mongo = PyMongo(app)
@@ -35,9 +35,7 @@ def index():
 
 @app.route("/write", methods=["GET","POST"])
 def board_write():
-    if:
-        pass
-    else:
+    if true:
         return render_template("write.html")
     
 @app.route("/user/<username>")
