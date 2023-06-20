@@ -2,6 +2,9 @@ from flask import Flask, render_template, url_for, current_app, g, request, redi
 from email_validator import validate_email, EmailNotValidError
 import logging
 from flask_debugtoolbar import DebugToolbarExtension
+import os
+
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 # SECRET_KEY 추가
@@ -12,6 +15,17 @@ app.logger.setLevel(logging.DEBUG)
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 #DebugToolbarExtension에 애플리케이션을 설정한다.
 toolbar = DebugToolbarExtension(app)
+
+# Mail 클래스의 config 추가
+app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER")
+app.config["MAIL_PORT"] = os.environ.get("MAIL_PORT")
+app.config["MAIL_USE_TLS"] = os.environ.get("MAIL_USE_TLS")
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
+
+#flask-mail 확장 등록
+mail = Mail(app)
 
 
 
@@ -86,12 +100,27 @@ def contact_complete():
             return redirect(url_for("contact"))
 
         
-        #이메일을 보낸다(나중 구현)
+        #이메일을 보낸다
+        send_email(
+            email,
+            "문의 감사합니다.",
+            "contact_mail",
+            username=username,
+            description=description,
+        )
+        
 
         #문의 완료 엔드포인트로 리다이렉트
         flash("문의해 주셔서 감사합니다.")
         return redirect(url_for("contact_complete"))
     return render_template("contact_complete.html")
+
+def send_email(to, subject, template, **kwargs):
+    """메일을 송신하는 함수"""
+    msg = Message(subject, recipients=[to])
+    msg.body = render_template(template + ".txt", **kwargs)
+    msg.html = render_template(template + ".html", **kwargs)
+    mail.send(msg)
 
 with app.test_request_context("/users?updated=true"):
     #true가 출력된다.
