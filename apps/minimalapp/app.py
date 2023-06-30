@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, current_app, g, request, redirect, flash
+from flask import Flask, render_template, url_for, current_app, g, request, redirect, flash, make_response, session
 from email_validator import validate_email, EmailNotValidError
 import logging
 from flask_debugtoolbar import DebugToolbarExtension
@@ -63,7 +63,17 @@ def show_name(name):
 
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    #응답 객체를 취득한다
+    response = make_response(render_template("contact.html"))
+
+    #쿠키 설정
+    response.set_cookie("flask test key", "flask test value")
+
+    #session 설정
+    session["username"] = "AK"
+
+    #응답 오브젝트를 반환한다.
+    return response
 
 @app.route("/contact/complete", methods=["GET", "POST"])
 def contact_complete():
