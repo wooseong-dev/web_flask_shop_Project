@@ -21,4 +21,5 @@ def hello_world():
 
 @bp.route('/')
 def index():
-    return 'This is index''''
+    return 'This is index'
+    '''
