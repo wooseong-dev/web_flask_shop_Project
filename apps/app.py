@@ -1,4 +1,7 @@
+from pathlib import Path
 from flask import Flask, render_template, url_for, current_app, g, request, redirect, flash, make_response, session
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from email_validator import validate_email, EmailNotValidError
 import logging
 from flask_debugtoolbar import DebugToolbarExtension
@@ -15,6 +18,8 @@ app.logger.setLevel(logging.DEBUG)
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 #DebugToolbarExtension에 애플리케이션을 설정한다.
 toolbar = DebugToolbarExtension(app)
+# SQLAlchemy를 인스턴스화 한다.
+db = SQLAlchemy()
 
 # sample _ register_blueprint
 #app.register_blueprint(sample, ur_prefix="/sample", subdomain="example")
@@ -69,6 +74,23 @@ sample = Blueprint(
 def create_app():
     #플라스크 인스턴스 작성
     app = Flask(__name__)
+
+    # 앱의 config 설정
+    app.config.from_mapping(
+        SECRET_KEY = "2AZSMss3p5QPbcY2hBsJ",
+        SQLALCHEMY_DATABASE_URI=
+        f"sqlite:///{Path(__file__).parent.parent / 'local.sqlite'}",
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+
+        # SQL 콘솔 로그 출력 설정
+        SQLAlchemy_ECHO=True
+    )
+
+    # SQLALCHEMY와 앱을 연계
+    db.init_app(app)
+
+    # Migrate 앱 연계
+    Migrate(app, db)
 
     #crud 패키지로부터 views를 import 한다
     from apps.crud import views as crud_views
