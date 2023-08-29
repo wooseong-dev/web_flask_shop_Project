@@ -16,6 +16,11 @@ app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 #DebugToolbarExtension에 애플리케이션을 설정한다.
 toolbar = DebugToolbarExtension(app)
 
+# sample _ register_blueprint
+#app.register_blueprint(sample, ur_prefix="/sample", subdomain="example")
+#블루프린트 템플릿 여러개 사용시 우선도
+#crud = Blueprint("crud", __name__, template_folder="templates")
+
 # Mail 클래스의 config 추가
 app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER")
 app.config["MAIL_PORT"] = os.environ.get("MAIL_PORT")
@@ -45,6 +50,19 @@ g.connection = "connection"
 print(g.connection)
 # >> connection
 
+
+#blue프린트 객체 생성
+#template_folder와 static_folder를 지정하지 않는 경우는
+#Blueprint 앱용 템플릿과 정적 파일을 이용할 수 없다.
+'''
+sample = Blueprint(
+    __name__,
+    "sample",
+    static_folder="static",
+    template_folder="templates",
+    url_prefix="/sample",
+    subdomain="example",
+)'''
 
 
 # create_app 함수 작성
