@@ -8,6 +8,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 import os
 
 from flask_mail import Mail, Message
+from flask_wtf.csrf import CSRFProtect
+
+# 보니까 csrf 보안 토큰 넣는듯
+csrf = CSRFProtect()
 
 app = Flask(__name__)
 # SECRET_KEY 추가
@@ -75,20 +79,27 @@ def create_app():
     #플라스크 인스턴스 작성
     app = Flask(__name__)
 
+
     # 앱의 config 설정
     app.config.from_mapping(
+        #csrf key
+        
         SECRET_KEY = "2AZSMss3p5QPbcY2hBsJ",
         SQLALCHEMY_DATABASE_URI=
         f"sqlite:///{Path(__file__).parent.parent / 'local.sqlite'}",
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
 
         # SQL 콘솔 로그 출력 설정
-        SQLAlchemy_ECHO=True
+        SQLAlchemy_ECHO=True,
+        WTF_CSRF_SECRTE_KEY="AuwzyszU5sugKN7KZs6f",
+        
     )
 
     # SQLALCHEMY와 앱을 연계
     db.init_app(app)
 
+    # csrf security
+    csrf.init_app(app)
     # Migrate 앱 연계
     Migrate(app, db)
 
