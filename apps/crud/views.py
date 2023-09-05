@@ -24,7 +24,7 @@ def index():
 
 @crud.route("/sql")
 def sql():
-    db.session.query(User).get(1)
+    db.session.query(User).all()
     return "콘솔 로그를 확인해 주세요"
 
 @crud.route("/users/new", methods=["GET", "POST"])

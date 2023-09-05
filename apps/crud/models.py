@@ -19,9 +19,10 @@ class User(db.Model):
     # 비밀번호 설정을 위한 속성값
     @property
     def password(self):
-        raise AttributeError(" Read Error ")
+        raise AttributeError("읽어들일 수 없음")
     #비밀번호 설정을 위한 Setter 함수로 해시화한 비밀번호 설정
     @password.setter
     def password(self,password):
         self.password_hash = generate_password_hash(password)
+
 

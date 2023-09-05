@@ -24,11 +24,7 @@ class UserForm(FlaskForm):
 
     #사용자 폼 password 속성의 라벨과 검증을 설정한다.
 
-    password = PasswordField(
-        "비밀번호",
-        validators=[DataRequired(message="비밀번호는 필수입니다. ")]
-
-    )
+    password = PasswordField("비밀번호",validators=[DataRequired(message="비밀번호는 필수입니다. ")])
     '''
     # validate_+filed명
     def validate_password(self,password):

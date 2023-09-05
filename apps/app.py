@@ -79,14 +79,11 @@ def create_app():
     #플라스크 인스턴스 작성
     app = Flask(__name__)
 
-
     # 앱의 config 설정
     app.config.from_mapping(
         #csrf key
-        
         SECRET_KEY = "2AZSMss3p5QPbcY2hBsJ",
-        SQLALCHEMY_DATABASE_URI=
-        f"sqlite:///{Path(__file__).parent.parent / 'local.sqlite'}",
+        SQLALCHEMY_DATABASE_URI="sqlite:///" + str(Path(Path(__file__).parent.parent, 'local.sqlite')),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
 
         # SQL 콘솔 로그 출력 설정
